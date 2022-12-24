@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+{% load static %}
+{% load thumbnail %}
+{% load mptt_tags %}
+{{ cart.get_total_price|json_script:'total_price' }}
+{{ cart|length|json_script:'cart_length'}}
+{% url 'get_cart_data' as cart_url %}
+{{ cart_url|json_script:'cart_url' }}
+<html lang="ru">
+<head>
+    {% block head %}
+    <title>Megano</title>
+    <meta name="description" content="Описание страницы">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link href="{% static 'assets/favicon.ico' %}" rel="shortcut icon">
+    <link rel="preload" href="{% static 'assets/fonts/Roboto/Roboto-Regular.woff' %}" as="font">
+    <link rel="preload" href="{% static 'assets/fonts/Roboto/Roboto-Italic.woff' %}" as="font">
+    <link rel="preload" href="{% static 'assets/fonts/Roboto/Roboto-Bold.woff' %}" as="font">
+    <link rel="preload" href="{% static 'assets/fonts/Roboto/Roboto-Bold_Italic.woff' %}" as="font">
+    <link rel="preload" href="{% static 'assets/fonts/Roboto/Roboto-Light.woff' %}" as="font">
+    <link rel="preload" href="{% static 'assets/fonts/Roboto/Roboto-Light_Italic.woff' %}" as="font">
+    <!-- CSS only -->
+    <link rel="stylesheet" href="{% static 'assets/css/toastr.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/fonts.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/basic.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/extra.css' %}">
+    <script src="{% static 'assets/plg/CountDown/countdown.js' %}"></script>
+    <script src="{% static 'assets/plg/jQuery/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/plg/Toastr/toastr.min.js' %}"></script>
+    {% endblock %}
+</head>
+<body>
+{% block header %}
+<header class="Header">
+    <div class="ControlPanel">
+        <div class="wrap">
+            <div class="row ControlPanel-row">
+                <div class="row-block">
+                    <div class="row ControlPanel-rowSplit">
+                        <div class="row-block"><a class="ControlPanel-title" href="{% url 'catalog' %}?delivery=on">Бесплатная доставка</a>
+                        </div>
+                        <div class="row-block hide_700"><span class="ControlPanel-title">Подпишитесь</span>
+                            <ul class="menu menu_img menu_smallImg ControlPanel-menu">
+                                <li class="menu-item"><a class="menu-link" href="#"><img
+                                        src="{% static 'assets/img/icons/socialHeader/fb.svg' %}" alt="fb.svg"/></a>
+                                </li>
+                                <li class="menu-item"><a class="menu-link" href="#"><img
+                                        src="{% static 'assets/img/icons/socialHeader/tw.svg' %}" alt="tw.svg"/></a>
+                                </li>
+                                <li class="menu-item"><a class="menu-link" href="#"><img
+                                        src="{% static 'assets/img/icons/socialHeader/in.svg' %}" alt="in.svg"/></a>
+                                </li>
+                                <li class="menu-item"><a class="menu-link" href="#"><img
+                                        src="{% static 'assets/img/icons/socialHeader/pt.svg' %}" alt="pt.svg"/></a>
+                                </li>
+                                <li class="menu-item"><a class="menu-link" href="#"><img
+                                        src="{% static 'assets/img/icons/socialHeader/mail.svg' %}" alt="mail.svg"/></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <nav class="row-block">
+                    <div class="row ControlPanel-rowSplit">
+                        {% if request.user.is_authenticated %}
+                        <div class="row-block">
+                            <a class="ControlPanel-title" href="{% url 'account' %}">
+                                {{ request.user }}
+                            </a>
+                        </div>
+                        <div class="row-block">
+                            <a class="ControlPanel-title" href="{% url 'logout' %}"> Выйти
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="row-block">
+                            <a class="ControlPanel-title" href="{% url 'login' %}">Войти /
+                                Зарегистрироваться
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="row Header-rowMain">
+            <div class="row-block Header-logo"><a class="logo" href="{% url 'main' %}"><img class="logo-image"
+                                                                                            src="{% static 'assets/img/logo.png' %}"
+                                                                                            alt="logo.png"/></a>
+            </div>
+            <nav class="row-block row-block_right Header-menu">
+                <div class="menuModal" id="navigate">
+                    <ul class="menu menu_main">
+                        <li class="menu-item"><a class="menu-link" href="{% url 'main' %}">Домой</a>
+                        </li>
+                        <li class="menu-item"><a class="menu-link" href='{% url "catalog" %}'>Каталог</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="row-block">
+                <div class="CartBlock"><a class="CartBlock-block" href="{% url 'cart_detail' %}"><img
+                        class="CartBlock-img"
+                        src="{% static 'assets/img/icons/cart.svg' %}"
+                        alt="cart.svg"/><span
+                        class="CartBlock-amount">{{ cart|length }}</span></a>
+                    <div class="CartBlock-block"><span class="CartBlock-price">{{ cart.get_total_price }}Р</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row-block Header-trigger"><a class="menuTrigger" href="#navigate">
+                <div class="menuTrigger-content">Показать навигацию
+                </div>
+                <span></span><span></span><span></span></a>
+            </div>
+        </div>
+    </div>
+    <div class="Header-searchWrap">
+        <div class="wrap">
+            <div class="Header-categories">
+                <div class="CategoriesButton">
+                    <div class="CategoriesButton-title">
+                        <div class="CategoriesButton-icon"><img src="{% static 'assets/img/icons/allDep.svg' %}"
+                                                                alt="allDep.svg"/>
+                        </div>
+                        <span class="CategoriesButton-text">Все категории</span>
+                        <div class="CategoriesButton-arrow">
+                        </div>
+                    </div>
+                    <div class="CategoriesButton-content">
+                        {% recursetree main_menu %}
+                        <div class="CategoriesButton-link"><a href="{{node.get_absolute_url}}">
+                            <div class="CategoriesButton-icon">
+                                {% if node.icon %}
+                                <img
+                                        src="{{ node.icon.url }}"
+                                        alt="{{ node.name }}"/>
+                                {% endif %}
+                            </div>
+                            <span class="CategoriesButton-text">{{ node.name }}</span></a>
+
+                            {% if not node.is_leaf_node %}
+                            <a class="CategoriesButton-arrow" href="#"></a>
+                            <div class="CategoriesButton-submenu">
+                                {{ children }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endrecursetree %}
+                    </div>
+                </div>
+            </div>
+            <div class="Header-searchLink"><img src="{% static 'assets/img/icons/search.svg' %}" alt="search.svg"/>
+            </div>
+            <div class="Header-search">
+                <div class="search">
+                    <form class="form form_search" action="{% url 'catalog' %}" method="get">
+                        <input class="search-input" id="id_name" name="name" type="text"
+                               placeholder="Что вы ищете..."/>
+                        <button class="search-button" type="submit" id="search"><img
+                                src="{% static 'assets/img/icons/search.svg' %}" alt="кнопка поиска"/>Найти
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+{% block middle %}
+{% endblock %}
+{% block footer%}
+<footer class="Footer">
+    {% for message in messages %}
+        <script type=text/javascript>
+            toastr.options.positionClass = "toast-bottom-right";
+            toastr.{{ message.tags }}('{{ message }}')
+        </script>>
+    {% endfor %}
+    <div class="wrap">
+        <div class="row Footer-main">
+            <div class="row-block"><a class="logo Footer-logo" href="{% url 'main' %}"><img class="logo-image"
+                                                                                      src="{% static 'assets/img/logo_footer.png' %}"
+                                                                                      alt="logo_footer.png"/></a>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincid unt ut
+                    laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad
+                </p>
+                <ul class="menu menu_img menu_smallImg Footer-menuSoc">
+                    <li class="menu-item"><a class="menu-link" href="#"><img
+                            src="{% static 'assets/img/icons/socialFooter/fb.svg' %}"
+                            alt="fb.svg"/></a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#"><img
+                            src="{% static 'assets/img/icons/socialFooter/tw.svg' %}"
+                            alt="tw.svg"/></a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#"><img
+                            src="{% static 'assets/img/icons/socialFooter/in.svg' %}"
+                            alt="in.svg"/></a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#"><img
+                            src="{% static 'assets/img/icons/socialFooter/pt.svg' %}"
+                            alt="pt.svg"/></a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#"><img
+                            src="{% static 'assets/img/icons/socialFooter/mail.svg' %}" alt="mail.svg"/></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row-block">
+                <strong class="Footer-title">Useful Links
+                </strong>
+                <ul class="menu menu_vt Footer-menu">
+                    <li class="menu-item"><a class="menu-link" href="#">Checkout</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">My Cart</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">Delivery</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">Order Info</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">Terms</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">Conditions</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row-block">
+                <strong class="Footer-title">My Account
+                </strong>
+                <ul class="menu menu_vt Footer-menu">
+                    <li class="menu-item"><a class="menu-link" href="#">Accessories</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">Bags</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">Cameras</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">Clothings</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">Electronics</a>
+                    </li>
+                    <li class="menu-item"><a class="menu-link" href="#">Fashion</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row-block">
+                <strong class="Footer-title">Контакты
+                </strong>
+                <p>Телефон: 8.800.200.600<br>Email: Support@ninzio.com<br>Skype: techno<br>Адрес: New York, north<br>Avenue
+                    26/7<br>0057
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="Footer-copy">
+        <div class="wrap">
+            <div class="row row_space">
+                <div class="row-block">© Copyright&#32;<a href="{% url 'main' %}">Megano магазин.</a>&#32;All rights reserved.
+                </div>
+                <div class="row-block"><span>Accepted Payments</span>
+                    <div class="Footer-payments">
+                        <div><img src="{% static 'assets/img/payments/visa.png' %}" alt="visa.png"/>
+                        </div>
+                        <div><img src="{% static 'assets/img/payments/mastercard.png' %}" alt="mastercard.png"/>
+                        </div>
+                        <div><img src="{% static 'assets/img/payments/paypal.png' %}" alt="paypal.png"/>
+                        </div>
+                        <div><img src="{% static 'assets/img/payments/american.png' %}" alt="american.png"/>
+                        </div>
+                        <div><img src="{% static 'assets/img/payments/electron.png' %}" alt="electron.png"/>
+                        </div>
+                        <div><img src="{% static 'assets/img/payments/maestro.png' %}" alt="maestro.png"/>
+                        </div>
+                        <div><img src="{% static 'assets/img/payments/delta.png' %}" alt="delta.png"/>
+                        </div>
+                        <div><img src="{% static 'assets/img/payments/e.png' %}" alt="e.png"/>
+                        </div>
+                        <div><img src="{% static 'assets/img/payments/dk.png' %}" alt="dk.png"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- JavaScript Bundle with Popper -->
+<script src="{% static 'assets/plg/jQuery/popper.min.js' %}"></script>
+<script src="{% static 'assets/plg/Bootstrap/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plg/form/jquery.bootstrap.modal.forms.min.js' %}"></script>
+<script src="{% static 'assets/plg/form/jquery.form.js' %}"></script>
+<script src="{% static 'assets/plg/form/jquery.maskedinput.min.js' %}"></script>
+<script src="{% static 'assets/plg/range/ion.rangeSlider.min.js' %}"></script>
+<script src="{% static 'assets/plg/Slider/slick.min.js' %}"></script>
+<script src="{% static 'assets/plg/inputmask-5.x/jquery.inputmask.js' %}"></script>
+
+<script src="{% static 'assets/js/scripts.js' %}"></script>
+
+{% endblock %}
+{% block javascript %}
+
+{% endblock javascript %}
+</body>
+</html>

@@ -1,0 +1,91 @@
+{% extends "app_shop/base.html" %}
+{% load static %}
+{% block middle %}
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+        <div class="wrap">
+            <div class="Middle-header">
+                <h1 class="Middle-title">Корзина
+                </h1>
+                <ul class="breadcrumbs Middle-breadcrumbs">
+                    <li class="breadcrumbs-item"><a href="{% url 'main' %}">домой</a>
+                    </li>
+                    <li class="breadcrumbs-item breadcrumbs-item_current"><span>Корзина</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="Section">
+        <div class="wrap">
+            {% for item in cart %}
+            {% with product=item.product %}
+            <form class="form" id="cart_form" method="post" action="{% url 'cart_add' product.id %}">
+                <div class="Cart-product">
+                    <div class="Cart-block Cart-block_row">
+                        <div class="Cart-block Cart-block_pict"><a class="Cart-pict" href="{{ product.get_absolute_url }}">
+                            <img class="Cart-img"
+                                 src='{% if product.image.first %}{{ product.image.first.image.url }}{% else %}{% static "/assets/img/content/home/bigGoods.png" %}{% endif %}'
+                                 alt="good's image"/></a>
+                        </div>
+                        <div class="Cart-block Cart-block_info"><a class="Cart-title" href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                            <div class="Cart-desc">{{ product.description }}
+                            </div>
+                        </div>
+                        <div class="Cart-block Cart-block_price">
+                            <div class="Cart-price" id="product-price">{{ item.total_price }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Cart-block Cart-block_row">
+                        <div class="Cart-block Cart-block_seller">
+                            <!-- - var options = setOptions(items, ['value', 'selected', 'disabled']);-->
+                        </div>
+                        <div class="Cart-block Cart-block_amount">
+                            <div class="Cart-amount">
+                                <div class="Amount">
+                                    {% csrf_token %}
+                                    <button class="Amount-remove" type="button">
+                                    </button>
+                                    {{ item.update_quantity_form }}
+                                    <button class="Amount-add" type="button">
+                                    </button>
+                                    <input type="hidden" class="product_id" id="product_id" name="product_id"
+                                           value="{{ product.id }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Cart-block Cart-block_delete"><a class="Cart-delete"
+                                                                     href="{% url 'cart_remove' product.id %}"><img
+                                src="{% static 'assets/img/icons/card/delete.svg' %}" alt="Delete"/></a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% endwith %}
+            {% endfor %}
+            <div class="Cart-total">
+                <div class="Cart-block Cart-block_total">
+                    <strong class="Cart-title">Итого:
+                    </strong><span class="Cart-price">{{ cart.get_total_price }} Руб.</span>
+                </div>
+                <div class="Cart-block">
+                    {% if cart %}
+                    <button class="btn btn_success btn_lg"
+                            type="button"
+                            onclick="window.location.href = '{% url 'create_order' %}';">
+                        Оформить заказ
+                    </button>
+                    {% else %}
+                    <button class="btn btn_success btn_lg"
+                            type="button" disabled
+                            onclick="window.location.href = '{% url 'create_order' %}';">
+                        Оформить заказ
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

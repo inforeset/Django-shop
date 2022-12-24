@@ -1,0 +1,47 @@
+{% extends "app_shop/base.html" %}
+{% block middle %}
+<div class="Middle Middle_top">
+    <div class="Section">
+        <div class="wrap">
+            <div class="Section-content">
+                <header class="Section-header Section-header_sm">
+                    <h2 class="Section-title">Оплатить
+                    </h2>
+                </header>
+                <form class="form" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {% for radio in form.payment_type %}
+                        <div>
+                            <label class="toggle">
+                                {{ radio.tag }}<span
+                                    class="toggle-box"></span><span
+                                    class="toggle-text">{{ radio.choice_label }}</span>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <button id="generate_btn" class="btn btn_success btn_disabled" type="button">Сгенерировать
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="{{ form.card_number.id_for_card_number }}">
+                            {{ form.card_number.label }}
+                        </label>
+                        {{ form.card_number }}
+                        {% for error in form.card_number.errors %}
+                        <div class="form-error">{{ error|escape }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="Order-footer">
+                        <button class="btn btn_primary btn_lg" type="submit">
+                            Оплатить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

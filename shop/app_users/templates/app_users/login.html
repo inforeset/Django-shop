@@ -1,0 +1,90 @@
+{% extends "app_shop/base.html" %}
+{% load static %}
+{% block middle %}
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+        <div class="wrap">
+            <div class="Middle-header">
+                <h1 class="Middle-title">Войти
+                </h1>
+                <ul class="breadcrumbs Middle-breadcrumbs">
+                    <li class="breadcrumbs-item"><a href="{% url 'main' %}">home</a>
+                    </li>
+                    <li class="breadcrumbs-item breadcrumbs-item_current"><span>Вход</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="Section Section_column Section_columnLeft">
+        <div class="wrap">
+            <div class="Section-column">
+                <div class="Section-columnSection">
+                    <header class="Section-header">
+                        <strong class="Section-title">Навигация
+                        </strong>
+                    </header>
+                    <div class="Section-columnContent">
+                        <div class="NavigateProfile">
+                            <ul class="menu menu_vt">
+                                <li class="menu-item"><a class="menu-link" href="{% url 'login' %}">Вход</a>
+                                </li>
+                                <li class="menu-item"><a class="menu-link" href="{% url 'registration' %}">Регистрация</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Section-content">
+                <div class="Profile">
+                    <form class="form Profile-form" action="#" method="post">
+                        <div class="row">
+                            <div class="row-block">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {% if form.non_field_errors %}
+                                        {% for error in form.non_field_errors %}
+                                        <div class="form-error">{{ error|escape }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <div class="form-group">
+                                        <label class="form-label" for="{{ form.username.id_for_username }}">E-mail
+                                        </label>
+                                        {{ form.username }}
+                                        {% if form.username.errors %}
+                                            {% for error in form.username.errors %}
+                                            <div class="form-error">{{ error|escape }}</div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="{{ form.password.id_for_password }}">Пароль
+                                        </label>
+                                        {{ form.password }}
+                                        {% if form.password.errors %}
+                                            {% for error in form.password.errors %}
+                                            <div class="form-error">{{ error|escape }}</div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="Profile-btn">
+                                            <button class="btn btn_success" onclick="window.location.href = '{% url 'password_reset' %}';">Восстановить
+                                            </button>
+                                            <button class="btn btn_success" type="submit">Войти
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="row-block">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends "app_shop/base.html" %}
+{% load static %}
+{% load thumbnail %}
+
+
+{% block middle %}
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+        <div class="wrap">
+            <div class="Middle-header">
+                {% if title %}
+                <h1 class="Middle-title">{{ title }}
+                </h1>
+                {% else %}
+                <h1 class="Middle-title">Каталог Megano
+                </h1>
+                {% endif %}
+                <ul class="breadcrumbs Middle-breadcrumbs">
+                    <li class="breadcrumbs-item"><a href="{% url 'main' %}">домой</a>
+                    </li>
+                    <li class="breadcrumbs-item breadcrumbs-item_current"><span>Каталог</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="Section Section_column Section_columnLeft">
+        <div class="wrap">
+            <div class="Section-column">
+                <div class="Section-columnSection">
+                    <header class="Section-header">
+                        <strong class="Section-title">Фильтр
+                        </strong>
+                    </header>
+                    <div class="Section-columnContent">
+                        <form class="form" method="get" id="filter_form">
+                            <div class="form-group">
+                                <div class="range Section-columnRange">
+                                    {{ filter.form.price }}
+                                    <div class="range-price">Цена:&#32;
+                                        <div class="rangePrice">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                {{ filter.form.name }}
+                            </div>
+                            <div class="form-group">
+                                {{ filter.form.manufacturer }}
+                            </div>
+                            <div class="form-group">
+                                <!-- - var options = setOptions(items, ['value', 'selected', 'disabled']);-->
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle">
+                                    {{ filter.form.in_stock }}<span class="toggle-box"></span><span class="toggle-text">Только товары в наличии</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle">
+                                    {{ filter.form.delivery }}<span class="toggle-box"></span><span class="toggle-text">С бесплатной доставкой</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle">
+                                    {{ filter.form.limited }}<span class="toggle-box"></span><span class="toggle-text">Ограниченная серия</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <div class="buttons">
+                                    <button class="btn btn_square btn_dark btn_narrow" type="submit">Применить</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="Section-content">
+                <div class="Sort">
+                    <div class="Sort-title">Сортировать по:
+                    </div>
+                    <div class="Sort-variants">
+                        {{ filter.form.ordering }}
+                    </div>
+                </div>
+                <div class="Cards">
+                    {% for card in page_obj %}
+                    <div class="Card"><a class="Card-picture" href="{{ card.get_absolute_url }}">
+                        <img src="
+                        {% thumbnail card.image.first.image '258x172' padding=True as im %}
+                        {{ im.url }}
+                        {% empty %}
+                        {% static 'assets/img/content/home/card.jpg' %}
+                        {% endthumbnail %}"
+                             alt="товар"/>
+                        </a>
+                        <div class="Card-content">
+                            <strong class="Card-title"><a href="{{ card.get_absolute_url }}">{{ card.name }}</a>
+                            </strong>
+                            <div class="Card-description">
+                                <div class="Card-cost"><span class="Card-price">{{ card.price }} руб.</span>
+                                </div>
+                                <div class="Card-category">{{ card.category }}
+                                </div>
+                                <div class="Card-hover">
+                                    <form action="{% url 'cart_add' card.id %}" id="form_cart" method="post">
+                                        {% csrf_token %}
+                                        <a class="Card-btn">
+                                            <img src="{% static 'assets/img/icons/cart.svg' %}"
+                                                 alt="добавить в корзину"/>
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>В данной категории нет товаров</p>
+                    {% endfor %}
+
+                </div>
+                <div class="Pagination">
+                    <div class="Pagination-ins">
+                        <a class="Pagination-element Pagination-element_prev"
+                           href="?page=1">
+                            <img src="{% static 'assets/img/icons/prevPagination.svg'%}" alt="Первая страница"/></a>
+                        {% if page_obj.has_previous %}
+                        {% with page_num=page_obj.previous_page_number|add:-1 %}
+                        {% if page_num > 0 %}
+                        <a class="Pagination-element" href="?page={{ page_num }}">
+                            <span class="Pagination-text">{{ page_num }}</span></a>
+                        {% endif %}
+                        {% endwith %}
+                        <a class="Pagination-element"
+                           href="?page={{ page_obj.previous_page_number }}">
+                            <span class="Pagination-text">{{ page_obj.previous_page_number }}</span></a>
+                        {% endif %}
+
+                        <a class="Pagination-element Pagination-element_current" href="#">
+                            <span class="Pagination-text">{{ page_obj.number }}</span></a>
+
+                        {% if page_obj.has_next %}
+                        <a class="Pagination-element" href="?page={{ page_obj.next_page_number }}">
+                            <span class="Pagination-text">{{ page_obj.next_page_number }}</span></a>
+                        {% with page_num=page_obj.next_page_number|add:1 %}
+                        {% if page_num <= page_obj.paginator.num_pages %}
+                        <a class="Pagination-element" href="?page={{ page_num }}">
+                            <span class="Pagination-text">{{ page_num }}</span></a>
+                        {% endif %}
+                        {% endwith %}
+                        {% endif %}
+                        <a class="Pagination-element Pagination-element_prev"
+                           href="?page={{ page_obj.paginator.num_pages }}">
+                            <img src="{% static 'assets/img/icons/nextPagination.svg'%}" alt="Последняя страница"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
