@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView, ListView, DetailView
 from app_users.forms import UserCreateForm
 from django.views.generic.edit import FormMixin, UpdateView
@@ -15,7 +17,7 @@ from .utils import get_delivery_price
 
 
 # Create your views here.
-class OrderView(LoginRequiredMixin, FormMixin, TemplateView):
+class OrderView(FormMixin, TemplateView):
     template_name = 'app_orders/order.html'
     form_class = OrderCreateForm
     raise_exception = True
@@ -33,6 +35,8 @@ class OrderView(LoginRequiredMixin, FormMixin, TemplateView):
         if total_cost < edge_delivery:
             choices.append(('1', f'Обычная доставка (+{usual_delivery_price} руб.)'))
             context['price_usual'] = usual_delivery_price
+            context['total_with_delivery'] = total_cost + get_delivery_price(total=cart.get_total_price(),
+                                                                             type_delivery='1')
         else:
             choices.append(('1', f'Обычная доставка (бесплатно)'))
         choices.append(('2', f'Экспресс доставка (+{express_delivery_price} руб.)'))
@@ -90,11 +94,24 @@ class OrderDetail(LoginRequiredMixin, DetailView):
     model = Order
     context_object_name = 'order'
 
+    def get_object(self, queryset=None):
+        object = super().get_object(queryset)
+        if object.user != self.request.user:
+            raise PermissionDenied
+        return object
+
 
 class OrderPayment(LoginRequiredMixin, UpdateView):
     model = Order
     form_class = OrderPaymentForm
     template_name = 'app_orders/payment.html'
+    raise_exception = True
+
+    def get_object(self, queryset=None):
+        object = super().get_object(queryset)
+        if object.user != self.request.user:
+            raise PermissionDenied
+        return object
 
     def post(self, request, *args, **kwargs):
         object = self.get_object()
@@ -107,10 +124,15 @@ class OrderPayment(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
 
+@require_GET
 @login_required
 def get_order_status(request):
     order_id = request.GET.get('order_id', None)
+    if not order_id:
+        return JsonResponse({})
     order = Order.objects.get(id=order_id)
+    if order.user != request.user:
+        return JsonResponse({})
     response = {
         'status': order.status,
         'code': order.payment_code

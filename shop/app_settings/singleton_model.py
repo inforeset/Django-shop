@@ -1,4 +1,4 @@
-from django.db import models, OperationalError
+from django.db import models
 
 
 class SingletonModel(models.Model):

@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 
 from app_shop.models import Product
 from django.views.generic import TemplateView
@@ -24,6 +24,7 @@ def cart_add(request, pk):
     return redirect('cart_detail')
 
 
+@require_GET
 def cart_remove(request, pk):
     cart = Cart(request)
     product = get_object_or_404(Product, id=pk)
@@ -43,6 +44,7 @@ class cart_detail(TemplateView):
         return ctx
 
 
+@require_GET
 def get_cart_data(request):
     product_id = request.GET.get('product', None)
     cart = Cart(request)

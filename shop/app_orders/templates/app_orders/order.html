@@ -277,11 +277,11 @@
                                 {% endfor %}
                                 <div class="Cart-total">
                                     <div class="Cart-block Cart-block_total">
-                                        <div class="Cart-block Cart-block_delivery" id="block_delivery">Доставка: {{
-                                            price_usual }} руб.
+                                        <div class="Cart-block Cart-block_delivery" id="block_delivery">
+                                            Доставка: {{ price_usual }} руб.
                                         </div>
                                         <strong class="Cart-title">Итого:
-                                        </strong><span class="Cart-price" id="total_value">{{ cart.get_total_price }} руб.</span>
+                                        </strong><span class="Cart-price" id="total_value">{{ total_with_delivery }} руб.</span>
                                     </div>
                                     <div class="Cart-block">
                                         <button class="btn btn_primary btn_lg" type="submit">Оплатить

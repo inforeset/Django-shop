@@ -1,5 +1,4 @@
 from django import forms
-from django.forms import HiddenInput
 
 from .models import Order
 
