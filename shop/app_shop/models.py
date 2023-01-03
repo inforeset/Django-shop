@@ -11,16 +11,16 @@ from app_settings.models import SiteSettings
 
 def validate_svg(file):
     if not is_svg(file):
-        raise ValidationError("File not svg")
+        raise ValidationError("Файл не svg")
 
 
 class Category(MPTTModel):
-    name = models.CharField(max_length=200, db_index=True)
-    slug = models.SlugField(max_length=200, db_index=True, unique=True)
-    icon = models.FileField(upload_to='category/', blank=True, validators=[validate_svg])
+    name = models.CharField(max_length=200, db_index=True, verbose_name='Название')
+    slug = models.SlugField(max_length=200, db_index=True, unique=True, verbose_name='Псевдоним для url')
+    icon = models.FileField(upload_to='category/', blank=True, validators=[validate_svg], verbose_name='Иконка')
     parent = TreeForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='children',
                             db_index=True, verbose_name='Родительская категория')
-    image = models.ImageField(blank=True, upload_to='category/')
+    image = models.ImageField(blank=True, upload_to='category/', verbose_name='Изображение')
 
     class MPTTMeta:
         order_insertion_by = ['name']
@@ -56,7 +56,7 @@ class Category(MPTTModel):
 class Product(models.Model):
     category = TreeForeignKey('Category', on_delete=models.PROTECT, related_name='category', verbose_name='Категория')
     name = models.CharField(max_length=200, db_index=True, verbose_name='Название')
-    slug = models.SlugField(max_length=200, db_index=True, verbose_name='Слаг поле')
+    slug = models.SlugField(max_length=200, db_index=True, verbose_name='Псевдоним для url')
     description = models.TextField(blank=True, verbose_name='Описание')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     stock = models.PositiveIntegerField(verbose_name='Остаток')
@@ -115,7 +115,7 @@ class PropertyName(models.Model):
 
 class Property(models.Model):
     property = models.ForeignKey(PropertyName, on_delete=models.CASCADE, related_name='property',
-                                 verbose_name='значение')
+                                 verbose_name='название')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='товар', related_name='property')
     value = models.ForeignKey('PropertyValue', on_delete=models.CASCADE, verbose_name='значение',
                               related_name='property')

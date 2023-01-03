@@ -84,7 +84,8 @@ class HistoryOrders(LoginRequiredMixin, ListView):
     context_object_name = 'orders'
 
     def get_queryset(self):
-        queryset = Order.objects.filter(user=self.request.user)
+        queryset = Order.objects.only('id', 'created', 'paid', 'delivery_type', 'payment_type', 'paid',
+                                      'status').filter(user=self.request.user)
         return queryset
 
 

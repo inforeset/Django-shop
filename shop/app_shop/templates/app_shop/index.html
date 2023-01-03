@@ -41,9 +41,9 @@
                 <div class="Cards">
                     {% for good in products %}
                     <div class="Card">
-                        <a class="Card-picture" href="{{ good.0.get_absolute_url }}">
+                        <a class="Card-picture" href="{{ good.get_absolute_url }}">
                             <img src="
-                            {% thumbnail good.0.image.first.image '258x172' padding=True as im %}
+                            {% thumbnail good.image.first.image '258x172' padding=True as im %}
                             {{ im.url }}
                             {% empty %}
                             {% static 'assets/img/content/home/card.jpg' %}
@@ -52,21 +52,21 @@
                         </a>
                         <div class="Card-content">
                             <strong class="Card-title">
-                                <a href="{{ good.0.get_absolute_url }}">
-                                    {{ good.0.name }}
+                                <a href="{{ good.get_absolute_url }}">
+                                    {{ good.name }}
                                 </a>
                             </strong>
                             <div class="Card-description">
                                 <div class="Card-cost">
                                     <span class="Card-price">
-                                        {{ good.0.price }}
+                                        {{ good.price }}
                                     </span>
                                 </div>
                                 <div class="Card-category">
-                                    {{ good.0.category }}
+                                    {{ good.category }}
                                 </div>
                                 <div class="Card-hover">
-                                    <form action="{% url 'cart_add' good.0.id %}" method="post">
+                                    <form action="{% url 'cart_add' good.id %}" method="post">
                                         {% csrf_token %}
                                         <a class="Card-btn">
                                             <img src="{% static 'assets/img/icons/cart.svg' %}"

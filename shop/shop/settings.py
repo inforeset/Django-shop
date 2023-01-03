@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'app_orders',
     'app_settings',
     'app_payment',
-    'app_review'
+    'app_review',
+
 ]
 
 MIDDLEWARE = [
@@ -59,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'shop.urls'
@@ -157,10 +159,9 @@ DATETIME_INPUT_FORMATS = [
 ]
 
 FIXTURE_DIRS = (
-   os.path.join(BASE_DIR, 'fixtures'),
+    os.path.join(BASE_DIR, 'fixtures'),
 )
 
 # session settings
 CART_SESSION_ID = 'cart'
 APP_SETTINGS_PATH = os.path.join(BASE_DIR, "settings.yaml")
-

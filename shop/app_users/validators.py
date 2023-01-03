@@ -7,8 +7,8 @@ class PasswordValidator(object):
     def validate(self, password, user=None):
         if not re.findall(r'^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!#$%&?]).*$', password):
             raise ValidationError(
-                "Password must contain 8 characters and at least one number, one letter, one letter in Upper case and one unique character such as !#$%&?",
+                "Пароль должен содержать 8 символов и минимум 1 цифру, одну букву, одну букву в верхнем регистре и один специальный символ из !#$%&?",
                 code='password_invalid')
 
     def get_help_text(self):
-        return "Password must contain 8 characters and at least one number, one letter, one letter in Upper case and one unique character such as !#$%&?"
+        return "Пароль должен содержать 8 символов и минимум 1 цифру, одну букву, одну букву в верхнем регистре и один специальный символ из !#$%&?"

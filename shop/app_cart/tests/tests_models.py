@@ -1,8 +1,6 @@
 from django.test import TestCase
-
 from app_cart.models import Cart_db
 from app_shop.models import Category, Product
-
 from app_users.models import User
 
 

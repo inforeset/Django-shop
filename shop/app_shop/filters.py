@@ -5,9 +5,11 @@ from django_property_filter import PropertyBooleanFilter, PropertyFilterSet, Pro
 from .models import Product
 from .shop_widgets import ShopLinkWidget, ShopCheckboxInput
 from .utils_shop import get_data_min, get_data_max
+from app_settings.models import SiteSettings
 
 
 class ProductFilter(PropertyFilterSet):
+    settings = SiteSettings.load()
     name = django_filters.CharFilter(field_name='name', lookup_expr='icontains', widget=forms.TextInput(
         attrs={'class': 'form-input form-input_full',
                'placeholder': 'Название'}))
@@ -20,8 +22,10 @@ class ProductFilter(PropertyFilterSet):
     price = django_filters.CharFilter(method='price_range', field_name='price', lookup_expr='range',
                                       widget=forms.TextInput(attrs={'class': 'range-line',
                                                                     'data-type': 'double',
-                                                                    'data-min': get_data_min(),
-                                                                    'data-max': get_data_max()}))
+                                                                    'data-min': get_data_min(
+                                                                        root_category=settings.root_category),
+                                                                    'data-max': get_data_max(
+                                                                        root_category=settings.root_category)}))
 
     order_by_field = 'ordering'
     ordering = PropertyOrderingFilter(

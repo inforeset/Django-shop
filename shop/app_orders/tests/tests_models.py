@@ -1,9 +1,6 @@
 from django.test import TestCase
-from django.db import models
 from app_shop.models import Category, Product
-
 from app_users.models import User
-
 from app_orders.models import OrderItem, Order
 
 

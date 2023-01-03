@@ -9,7 +9,7 @@ User = get_user_model()
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь', related_name='review')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='товар', related_name='review')
-    text = models.TextField(verbose_name='отзыв')
+    text = models.TextField(verbose_name='отзыв', max_length=300)
     created = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
 
     def __str__(self):

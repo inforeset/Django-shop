@@ -10,6 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.http import require_GET
 from django.views.generic import CreateView
 from django.views.generic.edit import UpdateView
 from django.contrib.auth import get_user_model
@@ -108,6 +109,7 @@ class MyPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = "app_users/password_reset_complete.html"
 
 
+@require_GET
 def validate_email(request):
     """Проверка доступности логина"""
     email = request.GET.get('email', None)
@@ -117,6 +119,7 @@ def validate_email(request):
     return JsonResponse(response)
 
 
+@require_GET
 def validate_phone(request):
     """Проверка доступности телефона"""
     phoneNumber = request.GET.get('phoneNumber', None)

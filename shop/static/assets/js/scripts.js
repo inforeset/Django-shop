@@ -741,7 +741,7 @@ var Profile = function(){
                     ext = file.name.split('.').pop();
                     if ((ext==='png' || ext==='jpg' || ext==='gif') && (file.size <= 2 * 1024 * 1024)){
                         var reader = new FileReader();
-    
+
                          reader.onload = function(e) {
                             $(input).closest($avatar).find('.Profile-img img').attr('src', e.target.result);
                         }

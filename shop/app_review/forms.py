@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from app_review.models import Review
+from .models import Review
 
 
 class ReviewForm(ModelForm):

@@ -2,38 +2,29 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordResetForm, \
     SetPasswordForm
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
-from django.core.validators import FileExtensionValidator
 
 User = get_user_model()
 
 
 class UserCreateForm(UserCreationForm):
-    image_validator = FileExtensionValidator(
-        allowed_extensions=['png', 'jpg', 'gif'],
-        message='File extension not allowed. Allowed extensions include  .png'
-    )
-
-    def validate_image_size(fieldfile_obj):
-        filesize = fieldfile_obj.file.size
-        megabyte_limit = 2.0
-        if filesize > megabyte_limit * 1024 * 1024:
-            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
-
     password1 = forms.CharField(max_length=150, required=True, widget=forms.PasswordInput(attrs={'class': 'form-input',
                                                                                                  'data-validate': 'requirePassword',
                                                                                                  'placeholder': 'Введите пароль',
-                                                                                                 'autocomplete': 'new-password'}))
+                                                                                                 'autocomplete': 'new-password',
+                                                                                                 'maxlength': '150'}))
     password2 = forms.CharField(max_length=150, required=True, widget=forms.PasswordInput(attrs={'class': 'form-input',
                                                                                                  'data-validate': 'requireRepeatPassword',
                                                                                                  'placeholder': 'Введите пароль повторно',
-                                                                                                 'autocomplete': 'new-password'}))
-    full_name = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={'class': 'form-input',
+                                                                                                 'autocomplete': 'new-password',
+                                                                                                 'maxlength': '150'}))
+    full_name = forms.CharField(max_length=254, required=True, widget=forms.TextInput(attrs={'class': 'form-input',
                                                                                              'data-validate': 'require',
-                                                                                             'placeholder': 'Введите ФИО'}))
-    email = forms.EmailField(label='e-mail', required=True, widget=forms.TextInput(attrs={'class': 'form-input',
-                                                                                          'data-validate': 'requireMail',
-                                                                                          'maxlength': '150'}))
+                                                                                             'placeholder': 'Введите ФИО',
+                                                                                             'maxlength': '254'}))
+    email = forms.EmailField(max_length=254, label='e-mail', required=True,
+                             widget=forms.TextInput(attrs={'class': 'form-input',
+                                                           'data-validate': 'requireMail',
+                                                           'maxlength': '254'}))
     phoneNumber = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-input',
                                                                                'data-validate': 'requirePhone'}))
     avatar = forms.ImageField(required=False,
@@ -49,31 +40,24 @@ class UserCreateForm(UserCreationForm):
 
 
 class MyUserChangeForm(UserChangeForm):
-    image_validator = FileExtensionValidator(
-        allowed_extensions=['png', 'jpg', 'gif'],
-        message='File extension not allowed. Allowed extensions include  .png'
-    )
-
-    def validate_image_size(fieldfile_obj):
-        filesize = fieldfile_obj.file.size
-        megabyte_limit = 2.0
-        if filesize > megabyte_limit * 1024 * 1024:
-            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
-
     password1 = forms.CharField(max_length=150, required=True, widget=forms.PasswordInput(attrs={'class': 'form-input',
                                                                                                  'data-validate': 'requirePassword',
                                                                                                  'placeholder': 'Введите пароль',
-                                                                                                 'autocomplete': 'new-password'}))
+                                                                                                 'autocomplete': 'new-password',
+                                                                                                 'maxlength': '150'}))
     password2 = forms.CharField(max_length=150, required=True, widget=forms.PasswordInput(attrs={'class': 'form-input',
                                                                                                  'data-validate': 'requireRepeatPassword',
                                                                                                  'placeholder': 'Введите пароль повторно',
-                                                                                                 'autocomplete': 'new-password'}))
-    full_name = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={'class': 'form-input',
+                                                                                                 'autocomplete': 'new-password',
+                                                                                                 'maxlength': '150'}))
+    full_name = forms.CharField(max_length=254, required=True, widget=forms.TextInput(attrs={'class': 'form-input',
                                                                                              'data-validate': 'require',
-                                                                                             'placeholder': 'Введите ФИО'}))
-    email = forms.EmailField(label='e-mail', required=True, widget=forms.TextInput(attrs={'class': 'form-input',
-                                                                                          'data-validate': 'require',
-                                                                                          'maxlength': '150'}))
+                                                                                             'placeholder': 'Введите ФИО',
+                                                                                             'maxlength': '254'}))
+    email = forms.EmailField(max_length=254, label='e-mail', required=True,
+                             widget=forms.TextInput(attrs={'class': 'form-input',
+                                                           'data-validate': 'require',
+                                                           'maxlength': '254'}))
     phoneNumber = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-input',
                                                                                'data-validate': 'require'}))
     avatar = forms.ImageField(required=False,
@@ -88,28 +72,29 @@ class MyUserChangeForm(UserChangeForm):
         fields = ('password1', 'password2', 'full_name', 'email', 'phoneNumber', 'avatar')
 
 
-# validators=[image_validator, validate_image_size],
 class UserLoginForm(AuthenticationForm):
-    username = forms.EmailField(required=True, label='Email', widget=forms.TextInput(attrs={'class': 'form-input',
-                                                                                            'data-validate': 'require',
-                                                                                            'maxlength': '150',
-                                                                                            'placeholder': 'Введите e-mail',
-                                                                                            'autocomplete': 'email'}))
+    username = forms.EmailField(max_length=254, required=True, label='Email',
+                                widget=forms.TextInput(attrs={'class': 'form-input',
+                                                              'data-validate': 'require',
+                                                              'maxlength': '254',
+                                                              'placeholder': 'Введите e-mail',
+                                                              'autocomplete': 'email'}))
 
     password = forms.CharField(max_length=150, label='Пароль', required=True,
                                widget=forms.PasswordInput(attrs={'class': 'form-input',
                                                                  'data-validate': 'require',
                                                                  'placeholder': 'Введите пароль',
-                                                                 'autocomplete': 'password'}))
+                                                                 'autocomplete': 'password',
+                                                                 'maxlength': '150'}))
 
 
 class MyPasswordResetForm(PasswordResetForm):
-    email = forms.EmailField(
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'form-input',
-                                      'data-validate': 'require',
-                                      'maxlength': '254',
-                                      'autocomplete': 'email'}))
+    email = forms.EmailField(max_length=254,
+                             required=True,
+                             widget=forms.TextInput(attrs={'class': 'form-input',
+                                                           'data-validate': 'require',
+                                                           'maxlength': '254',
+                                                           'autocomplete': 'email'}))
 
 
 class MySetPasswordForm(SetPasswordForm):
@@ -119,7 +104,8 @@ class MySetPasswordForm(SetPasswordForm):
         widget=forms.PasswordInput(attrs={'class': 'form-input',
                                           'data-validate': 'requirePassword',
                                           'placeholder': 'Введите пароль',
-                                          "autocomplete": "new-password"}),
+                                          "autocomplete": "new-password",
+                                          'maxlength': '150'}),
         strip=False
     )
     new_password2 = forms.CharField(
@@ -129,5 +115,6 @@ class MySetPasswordForm(SetPasswordForm):
         widget=forms.PasswordInput(attrs={'class': 'form-input',
                                           'data-validate': 'requireRepeatPassword',
                                           'placeholder': 'Введите пароль повторно',
-                                          "autocomplete": "new-password"}),
+                                          "autocomplete": "new-password",
+                                          'maxlength': '150'}),
     )

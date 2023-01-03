@@ -1,6 +1,5 @@
 from django.test import TestCase
-from django.forms import HiddenInput, Textarea, TextInput, RadioSelect
-
+from django.forms import Textarea, TextInput, RadioSelect
 from app_orders.forms import OrderCreateForm
 
 
