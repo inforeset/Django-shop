@@ -1,0 +1,197 @@
+{% extends "app_shop/base.html" %}
+{% load static %}
+{% load thumbnail %}
+
+{% block middle %}
+<div class="Middle">
+    <div class="Section">
+        <div class="wrap">
+            <div class="BannersHome">
+                {% for category in site_settings.category_main_page.all|slice:":3" %}
+                <a class="BannersHomeBlock" href="{{ category.get_absolute_url }}">
+                    <div class="BannersHomeBlock-row">
+                        <div class="BannersHomeBlock-block">
+                            <strong class="BannersHomeBlock-title">{{ category.name }}
+                            </strong>
+                            <div class="BannersHomeBlock-content">от&#32;<span
+                                    class="BannersHomeBlock-price">{{ category.get_min }}Р</span>
+                            </div>
+                        </div>
+                        <div class="BannersHomeBlock-block">
+                            <div class="BannersHomeBlock-img">
+                                {% if category.image %}
+                                <img src="{{ category.image.url }}"
+                                     alt="категория товаров"/>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="Section Section_column Section_columnDesktop">
+        <div class="wrap">
+            <div class="Section-content">
+                <header class="Section-header">
+                    <h2 class="Section-title">Популярные товары
+                    </h2>
+                </header>
+                <div class="Cards">
+                    {% for good in products %}
+                    <div class="Card">
+                        <a class="Card-picture" href="{{ good.get_absolute_url }}">
+                            <img src="
+                            {% thumbnail good.image.first.image '258x172' padding=True as im %}
+                            {{ im.url }}
+                            {% empty %}
+                            {% static 'assets/img/content/home/card.jpg' %}
+                            {% endthumbnail %}"
+                                 alt="изображение товара"/>
+                        </a>
+                        <div class="Card-content">
+                            <strong class="Card-title">
+                                <a href="{{ good.get_absolute_url }}">
+                                    {{ good.name }}
+                                </a>
+                            </strong>
+                            <div class="Card-description">
+                                <div class="Card-cost">
+                                    <span class="Card-price">
+                                        {{ good.price }}
+                                    </span>
+                                </div>
+                                <div class="Card-category">
+                                    {{ good.category }}
+                                </div>
+                                <div class="Card-hover">
+                                    <form action="{% url 'cart_add' good.id %}" method="post">
+                                        {% csrf_token %}
+                                        <a class="Card-btn">
+                                            <img src="{% static 'assets/img/icons/cart.svg' %}"
+                                                 alt="добавить в корзину"/>
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Section Section_column Section_columnRight">
+        <div class="wrap">
+            <div class="Section-column">
+                <div class="Section-columnSection Section-columnSection_mark">
+                    <div class="media media_advantage">
+                        <div class="media-image"><img src="{% static 'assets/img/icons/advantages/shipping.svg' %}"
+                                                      alt="shipping.svg"/>
+                        </div>
+                        <div class="media-content">
+                            <strong class="media-title">Доставка и возврат
+                            </strong>
+                            <p class="media-text">Доставка по всему миру
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="Section-columnSection Section-columnSection_mark">
+                    <div class="media media_advantage">
+                        <div class="media-image"><img src="{% static 'assets/img/icons/advantages/moneyBack.svg' %}"
+                                                      alt="moneyBack.svg"/>
+                        </div>
+                        <div class="media-content">
+                            <strong class="media-title">Возврат денег
+                            </strong>
+                            <p class="media-text">Гарантированные платежи
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="Section-columnSection Section-columnSection_mark">
+                    <div class="media media_advantage">
+                        <div class="media-image"><img src="{% static 'assets/img/icons/advantages/support.svg' %}"
+                                                      alt="support.svg"/>
+                        </div>
+                        <div class="media-content">
+                            <strong class="media-title">Политика поддержки
+                            </strong>
+                            <p class="media-text">Быстрая группа поддержки
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="Section-columnSection Section-columnSection_mark">
+                    <div class="media media_advantage">
+                        <div class="media-image"><img src="{% static 'assets/img/icons/advantages/quality.svg' %}"
+                                                      alt="quality.svg"/>
+                        </div>
+                        <div class="media-content">
+                            <strong class="media-title">Гарантированное качество
+                            </strong>
+                            <p class="media-text">Лучшая гарантия на товары
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Section-content">
+                <div class="Slider Slider_carousel">
+                    <header class="Section-header Section-header_close">
+                        <h2 class="Section-title">Ограниченная серия
+                        </h2>
+                        <div class="Section-control">
+                            <div class="Slider-navigate">
+                            </div>
+                        </div>
+                    </header>
+                    <div class="Slider-box Cards">
+                        {% for product in limited %}
+                        <div class="Slider-item">
+                            <div class="Slider-content">
+                                <div class="Card">
+                                    <a class="Card-picture" href="#">
+                                        <img src="
+                                        {% thumbnail product.image.first.image '258x172' padding=True as im %}
+                                        {{ im.url }}
+                                        {% empty %}
+                                        {% static 'assets/img/content/home/card.jpg' %}
+                                        {% endthumbnail %}"/>
+                                    </a>
+                                    <div class="Card-content">
+                                        <strong class="Card-title">
+                                            <a href="{{ product.get_absolute_url }}">
+                                                {{ product.name|truncatechars:20 }}
+                                            </a>
+                                        </strong>
+                                        <div class="Card-description">
+                                            <div class="Card-cost"><span class="Card-price">{{ product.price }}</span>
+                                            </div>
+                                            <div class="Card-category">{{ product.category }}
+                                            </div>
+                                            <div class="Card-hover">
+                                                <form action="{% url 'cart_add' product.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <a class="Card-btn">
+                                                        <img src="{% static 'assets/img/icons/cart.svg' %}"
+                                                             alt="добавить в корзину"/>
+                                                    </a>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "app_shop/base.html" %}
+{% load static %}
+{% block middle %}
+{% if request.user.avatar %}
+{{ request.user.avatar.url|json_script:"user_avatar" }}
+{% endif %}
+<div class="Middle Middle_top">
+    <div class="Middle-top">
+        <div class="wrap">
+            <div class="Middle-header">
+                <h1 class="Middle-title">Профиль
+                </h1>
+                <ul class="breadcrumbs Middle-breadcrumbs">
+                    <li class="breadcrumbs-item"><a href="{% url 'main' %}">home</a>
+                    </li>
+                    <li class="breadcrumbs-item breadcrumbs-item_current"><span>Профиль</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="Section Section_column Section_columnLeft">
+        <div class="wrap">
+            <div class="Section-column">
+                <div class="Section-columnSection">
+                    <header class="Section-header">
+                        <strong class="Section-title">Навигация
+                        </strong>
+                    </header>
+                    <div class="Section-columnContent">
+                        <div class="NavigateProfile">
+                            <ul class="menu menu_vt">
+                                <li class="menu-item"><a class="menu-link" href="{% url 'account' %}">Личный кабинет</a>
+                                </li>
+                                <li class="menu-item_ACTIVE menu-item"><a class="menu-link"
+                                                                          href="{% url 'profile' %}">Профиль</a>
+                                </li>
+                                <li class="menu-item"><a class="menu-link" href="{% url 'history' %}">История заказов</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Section-content">
+                <div class="Profile">
+                    <form class="form Profile-form" enctype="multipart/form-data" method="post">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                            <div class="form-error">{{ error|escape }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="row">
+                            <div class="row-block">
+                                <div class="form-group">
+                                    <label class="form-label" for="{{ form.avatar.id_for_avatar }}">Аватар
+                                    </label>
+                                    <div class="Profile-avatar Profile-avatar_noimg">
+                                        <div class="Profile-img">
+                                            <img src="{%static 'assets/img/content/home/empty_avatar.jpg' %}" alt="аватар"/>
+                                        </div>
+                                        <label class="Profile-fileLabel" for="{{ form.avatar.id_for_avatar }}">Выберите
+                                            аватар
+                                        </label>
+                                        {{ form.avatar }}
+                                        {{ form.avatar.errors }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="{{ form.full_name.id_for_full_name }}">ФИО
+                                    </label>
+                                    {{ form.full_name }}
+                                    {% if form.full_name.errors %}
+                                        {% for error in form.full_name.errors %}
+                                        <div class="form-error">{{ error|escape }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row-block">
+                                <div class="form-group">
+                                    <label class="form-label" for="{{ form.email.id_for_email }}">E-mail
+                                    </label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        {% for error in form.email.errors %}
+                                        <div class="form-error">{{ error|escape }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="{{ form.phoneNumber.id_for_phoneNumber }}">Телефон
+                                    </label>
+                                    {{ form.phoneNumber }}
+                                    {% if form.phoneNumber.errors %}
+                                        {% for error in form.phoneNumber.errors %}
+                                        <div class="form-error">{{ error|escape }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="{{ form.password1.id_for_password1 }}">Пароль
+                                    </label>
+                                    {{ form.password1 }}
+                                    {% if form.password1.errors %}
+                                        {% for error in form.password1.errors %}
+                                        <div class="form-error">{{ error|escape }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="{{ form.password2.id_for_password2 }}">Подтверждение
+                                        пароля
+                                    </label>
+                                    {{ form.password2 }}
+                                    {% if form.password2.errors %}
+                                        {% for error in form.password2.errors %}
+                                        <div class="form-error">{{ error|escape }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="Profile-btn">
+                                        <button class="btn btn_success" type="submit">Сохранить
+                                        </button>
+                                    </div>
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="Profile-success">{{ message }}
+                                        </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
