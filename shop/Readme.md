@@ -19,6 +19,7 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
+* Нужен установленный сервер RabbitMQ
 * Необходимо запустить celery след. командной:
 ```
 celery -A shop.celery_task:app worker -l info -P gevent 
