@@ -123,17 +123,17 @@
                 <div class="Pagination">
                     <div class="Pagination-ins">
                         <a class="Pagination-element Pagination-element_prev"
-                           href="?page=1">
+                           href="?page=1&{{ parameters }}">
                             <img src="{% static 'assets/img/icons/prevPagination.svg'%}" alt="Первая страница"/></a>
                         {% if page_obj.has_previous %}
                         {% with page_num=page_obj.previous_page_number|add:-1 %}
                         {% if page_num > 0 %}
-                        <a class="Pagination-element" href="?page={{ page_num }}">
+                        <a class="Pagination-element" href="?page={{ page_num }}&{{ parameters }}">
                             <span class="Pagination-text">{{ page_num }}</span></a>
                         {% endif %}
                         {% endwith %}
                         <a class="Pagination-element"
-                           href="?page={{ page_obj.previous_page_number }}">
+                           href="?page={{ page_obj.previous_page_number }}&{{ parameters }}">
                             <span class="Pagination-text">{{ page_obj.previous_page_number }}</span></a>
                         {% endif %}
 
@@ -141,17 +141,17 @@
                             <span class="Pagination-text">{{ page_obj.number }}</span></a>
 
                         {% if page_obj.has_next %}
-                        <a class="Pagination-element" href="?page={{ page_obj.next_page_number }}">
+                        <a class="Pagination-element" href="?page={{ page_obj.next_page_number }}&{{ parameters }}">
                             <span class="Pagination-text">{{ page_obj.next_page_number }}</span></a>
                         {% with page_num=page_obj.next_page_number|add:1 %}
                         {% if page_num <= page_obj.paginator.num_pages %}
-                        <a class="Pagination-element" href="?page={{ page_num }}">
+                        <a class="Pagination-element" href="?page={{ page_num }}&{{ parameters }}">
                             <span class="Pagination-text">{{ page_num }}</span></a>
                         {% endif %}
                         {% endwith %}
                         {% endif %}
                         <a class="Pagination-element Pagination-element_prev"
-                           href="?page={{ page_obj.paginator.num_pages }}">
+                           href="?page={{ page_obj.paginator.num_pages }}&{{ parameters }}">
                             <img src="{% static 'assets/img/icons/nextPagination.svg'%}" alt="Последняя страница"/></a>
                     </div>
                 </div>
