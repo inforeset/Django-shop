@@ -1,17 +1,13 @@
 from decimal import Decimal
-
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.views.decorators.http import require_POST, require_GET
-
 from app_shop.models import Product
 from django.views.generic import TemplateView
-
 from .cart import Cart
 from .forms import CartAddProductForm
 
 
-# Create your views here.
 @require_POST
 def cart_add(request, pk):
     cart = Cart(request)

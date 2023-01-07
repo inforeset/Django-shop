@@ -924,17 +924,18 @@ $(document).ready(function() {
                 data: data,
                 cache: true,
                 success: function (response){
-                    if (response.status) {
+                    if (response.code != 1) {
                         $('#error_type').html('Оплата не прошла');
-                        $('#error_info').html(response.status);
-                        if (response.code != 1){
-                            $('#pay_btn').removeClass('btn_disabled');
-                            $('#pay_btn').show();
+                        if (response.status){
+                            $('#error_info').html(response.status);
+                        } else {
+                            $('#error_info').html('Ошибка сервера оплаты');
                         }
-                    }
-                    if (response.code == 1){
-                            $('.Order-info_error').hide();
-                            $('#status').html('Оплачен');
+                        $('#pay_btn').removeClass('btn_disabled');
+                        $('#pay_btn').show();
+                    } else {
+                        $('.Order-info_error').hide();
+                        $('#pay_status').html('Оплачен');
                     }
                 },
                 // если ошибка, то
