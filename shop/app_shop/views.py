@@ -66,11 +66,14 @@ class ProductByCategoryView(FilterView):
         return queryset
 
     def get_context_data(self, **kwargs):
+        _request_copy = self.request.GET.copy()
+        parameters = _request_copy.pop('page', True) and _request_copy.urlencode()
         context = super().get_context_data(**kwargs)
         context['title'] = self.category
         qs = self.get_queryset()
         min_price = get_data_min(queryset=qs, root_category=self.settings.root_category)
         max_price = get_data_max(queryset=qs, root_category=self.settings.root_category)
+        context['parameters'] = parameters
         context['filter'].form.fields['price'].widget.attrs = {'class': 'range-line',
                                                                'data-type': 'double',
                                                                'data-min': min_price,
