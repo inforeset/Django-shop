@@ -35,10 +35,10 @@ class OrderView(FormMixin, TemplateView):
         if total_cost < edge_delivery:
             choices.append(('1', f'Обычная доставка (+{usual_delivery_price} руб.)'))
             context['price_usual'] = usual_delivery_price
-            context['total_with_delivery'] = total_cost + get_delivery_price(total=cart.get_total_price(),
-                                                                             type_delivery='1')
         else:
             choices.append(('1', f'Обычная доставка (бесплатно)'))
+        context['total_with_delivery'] = total_cost + get_delivery_price(total=cart.get_total_price(),
+                                                                         type_delivery='1')
         choices.append(('2', f'Экспресс доставка (+{express_delivery_price} руб.)'))
         context['form'].fields['delivery_type'].widget.choices = choices
         if self.request.user.is_authenticated:
