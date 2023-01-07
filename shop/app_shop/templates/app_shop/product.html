@@ -127,11 +127,12 @@
                                 {% for review in reviews %}
                                 <div class="Comment">
                                     <div class="Comment-column Comment-column_pict">
-                                        <div class="Comment-avatar">
-                                            {% if product.user.avatar %}
-                                            <img src='{{ product.user.avatar.url }}' alt="avatar"/>
-                                            {% endif %}
-                                        </div>
+                                        {% if review.user.avatar %}
+                                            <img src='{{ review.user.avatar.url }}' width="99" height="99" alt="avatar"/>
+                                        {% else %}
+                                            <div class="Comment-avatar">
+                                            </div>
+                                        {% endif %}
                                     </div>
                                     <div class="Comment-column">
                                         <header class="Comment-header">
