@@ -4,12 +4,10 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, FileExtensionValidator
 from django.db import models
 
-
 from .managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-
     image_validator = FileExtensionValidator(
         allowed_extensions=['png', 'jpg', 'gif'],
         message='Расширение не поддерживается. Разрешенные расширения .jpg .gif .png'

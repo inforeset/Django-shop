@@ -261,7 +261,7 @@ var form = function(){
                                     message = 'Это поле обязательно для заполнения. ';
                                     error = true;
                                 } else if (!validatePassword($this.val())) {
-                                    message = 'Password must contain 8 characters and at least one number, one letter, one letter in Upper case and one unique character such as !#$%&?';
+                                    message = 'Пароль должен содержать 8 символов и минимум 1 цифру, одну букву, одну букву в верхнем регистре и один специальный символ из !#$%&?';
                                     error = true;
                                 }
                                 break;
