@@ -28,11 +28,13 @@ def order_created(order_id):
             store_good.stock -= good.quantity
             objs_store.append(store_good)
         with transaction.atomic():
-            if not status:
+            if payment_code != 1:
                 Product.objects.bulk_update(objs_store, ['stock'])
                 status, payment_code = get_payment_status(order.card_number)
                 if payment_code == 1:
                     order.paid = True
+                else:
+                    raise IntegrityError
     except IntegrityError:
         payment_code = 2
     except (ConnectTimeout, HTTPError, ReadTimeout, Timeout, ConnectionError):
